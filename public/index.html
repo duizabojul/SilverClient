@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>SS-Client</title>
+    <title>Silver-Smok</title>
   </head>
   <body>
     <noscript>
@@ -14,4 +14,16 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
+  <script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+  <script>
+    var config = {
+      apiKey: "AIzaSyD7Y0vvRAsBq3pEYB849D22fTwD-dtJ6k8",
+      authDomain: "silverclient-ea7c2.firebaseapp.com",
+      databaseURL: "https://silverclient-ea7c2.firebaseio.com",
+      projectId: "silverclient-ea7c2",
+      storageBucket: "silverclient-ea7c2.appspot.com",
+      messagingSenderId: "158814993911"
+    };
+    firebase.initializeApp(config);
+  </script>
 </html>

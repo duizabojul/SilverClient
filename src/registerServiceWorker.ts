@@ -12,6 +12,15 @@ if (process.env.NODE_ENV === 'production') {
       console.log('Content has been cached for offline use.');
     },
     updated() {
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames.filter(cacheName => {
+            return true
+          }).map(cacheName => {
+            return caches.delete(cacheName);
+          })
+        );
+      })
       console.log('New content is available; please refresh.');
     },
     offline() {
