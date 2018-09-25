@@ -1,5 +1,14 @@
 {
   "projects": {
-    "default": "silverclient-ea7c2"
+    "default": "silver-smok-admin"
+  },
+  "targets": {
+    "silver-smok-admin": {
+      "hosting": {
+        "client": [
+          "silver-smok-client"
+        ]
+      }
+    }
   }
 }

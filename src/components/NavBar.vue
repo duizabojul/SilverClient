@@ -1,6 +1,6 @@
 <template>
   <div  id="navbar">
-    <span class="title">Silver-Smok 2</span>
+    <span class="title">Silver-Smok</span>
     <div class="flex-grow-1"></div>
     <div v-if="user">logged in</div>
     <button v-on:click="toggleUser" class="button" v-if="!user">Connexion</button>
@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import Vue from 'vue';
 
 
 export default Vue.extend({
@@ -27,9 +27,14 @@ export default Vue.extend({
 
 <style>
 #navbar {
+  z-index: 1;
   display : flex;
   padding : 10px 15px;
   align-items: center;
   min-height: 35px;
+  position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
 }
 </style>
