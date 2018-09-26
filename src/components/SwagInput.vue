@@ -2,7 +2,7 @@
   <div class="field" v-bind:id="fieldInput">
     <div class="field__input-wrapper">
       <label class="field__label" for="email">{{label}}</label>
-      <input v-bind:value="value" v-on:input="$emit('input', $event.target.value)" v-bind:type="type" autocomplete="nope" class="field__input" v-bind:placeholder="placeholder" v-bind:id="id">
+      <input @keyup.enter="onenter()" v-on:input="$emit('input', $event.target.value)" v-bind:type="type" autocomplete="nope" class="field__input" v-bind:placeholder="placeholder" v-bind:id="id">
     </div>
   </div>
 </template>
@@ -11,7 +11,7 @@
   import Vue from 'vue';
 
   export default Vue.extend({
-    props: ['id', 'placeholder', 'label', 'type', 'value'],
+    props: ['id', 'placeholder', 'label', 'type', 'value', 'onenter'],
     mounted:function(){
       const element:any = document.getElementById(this.id)
         element.addEventListener('focus', () => {
