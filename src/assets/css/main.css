@@ -165,7 +165,7 @@ html, body, #app {
   
   .button {
     padding: 6px 14px !important;
-    border: 1px solid transparent !important;
+    border: none;
     border-radius: 4px;
     color: #fff !important;
     background: #23b7e5;
@@ -485,6 +485,41 @@ html, body, #app {
   
   .bg-heat.text, .bg-info.text,.bg-black.text,.bg-success.text,.bg-danger.text,.bg-warning.text,.bg-dark.text{
     text-shadow: 0px 1px 2px rgba(0,0,0,.1);
+  }
+
+  .bg-success-alternative {
+    background-color : rgb(25, 194, 95);
+    color : white
+  }
+
+  .bg-success {
+    color: #c6efd0;
+    background-color: #27c24c;
+  }
+  
+  .bg-success.lt,
+  .bg-success .lt {
+    background-color: #31d257;
+  }
+  
+  .bg-success.lter,
+  .bg-success .lter {
+    background-color: #48d46a;
+  }
+  
+  .bg-success.dk,
+  .bg-success .dk {
+    background-color: #20af42;
+  }
+  
+  .bg-success.dker,
+  .bg-success .dker {
+    background-color: #1a9c39;
+  }
+  
+  .bg-success.bg,
+  .bg-success .bg {
+    background-color: #27c24c;
   }
   
   
