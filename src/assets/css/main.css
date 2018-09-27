@@ -112,6 +112,7 @@ html, body, #app {
   }
 
   .f-wrap {
+    display : flex;
       flex-wrap : wrap
   }
   

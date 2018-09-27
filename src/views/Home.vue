@@ -2,7 +2,7 @@
   <div id="home-page" class="page-container nice-background">
     <transition name="slide-up-fade">
       <div id="login-wrapper" v-if="showLoginWrapper">
-        <div class="flex-column f-center-v w-l w-r">
+        <div class="flex-column f-center-v w w-t-0">
           <h1 class="white m-t-0 m-b">Silver-Smok</h1>
           <transition @after-leave="afterLoginLeave" name='slide-up-fade'>
             <div class="panel login-panel" v-if="showLoginPanel">
@@ -30,7 +30,7 @@
                   <strong>Vous avez un compte fidélité dans une boutique Silver-Smok. Créez votre espace en ligne en 30
                     secondes !</strong>
                 </div>
-                <button type="submit" @click="createAccount" class="button lg m-auto bg-heat w-full m-auto m-t-xs m-b-0">Créer
+                <button type="submit" @click="goToCreatingAccountProcess" class="button lg m-auto bg-heat w-full m-auto m-t-xs m-b-0">Créer
                   mon espace Silver-Smok
                 </button>
               </div>
@@ -39,7 +39,7 @@
           <transition @after-leave="afterAccountCreationLeave" name='slide-up-fade'>
             <div v-if="showCreateAccountPanel">
               <div class="login-panel account-creation-panel panel">
-                <div class="w bg-info gradient" style="font-size: 17px;font-weight: 700;padding-left: 20px;">
+                <div class="w bg-info gradient text-center-sm" style="font-size: 17px;font-weight: 700;padding-left: 20px;">
                   Création de votre espace Silver-Smok
                 </div>
                 <div class="w-sm bg-black lter flex f-wrap" style="justify-content: space-around;">
@@ -52,15 +52,16 @@
                 </div>
                 <div class="horizontal-slider" :class="newAccount.step === 2 ? 'step-2' : ''">
                   <div class="flex-column w-lg">
-                    <ul class="w-l-lg m-t-xs">
+                    <ul class="w-l-lg m-t-xs flex-column flex-grow-1" style="justify-content : space-evenly">
                       <li>Afin de créer votre espace Silver-Smok, vous devez au préalable avoir un compte fidélité
                         Silver-Smok dans une boutique, et communiqué votre adresse e-mail au vendeur.</li>
                       <li class="m-t">Si vous avez un compte fidélité mais que vous n'avez pas communiqué votre adresse
                         e-mail, vous pouvez vous rendre en boutique ou demander de l'aide à un conseiller sur la chatbox
                         en bas à droite de l'écran.</li>
+                         <li class="m-t">Entrez l'adresse e-mail associée à votre compte Silver-Smok afin que nous puissions rechercher et lier votre compte. </li>
                     </ul>
                     <swag-input @keyup.enter="linkAccount" @input="accountCreationEmailChanged" v-model="newAccount.mail"
-                      placeholder="Entrez l'adresse e-mail associée à votre compte Silver-Smok" label="E-mail"
+                      placeholder="Votre adresse e-mail" label="E-mail"
                       id="account-creation-mail-input"></swag-input>
                     <div class="flex">
                       <div class="flex-grow-1"></div>
@@ -72,33 +73,37 @@
                       </button>
                     </div>
                   </div>
-                  <div class="flex-column w-lg">
-                    <div class="f-center-h">
+                  <div class="flex-column f-center-v w-lg">
+                    <div class="f-center flex-grow-1">
                       <div class="silversmok-card">
                       <div class="flex-grow-1 f-center">
-                        <img src="../assets/silver-smok-logo.jpg" style="height : 140px">
+                        <img srcset="../assets/silver-smok-logo-2x.png 2x" src="../assets/silver-smok-logo.png" style="height : 140px">
                       </div>
                         <div class="card-header">
-                           <div class="white title text-center w-xs" style="text-transform : capitalize" v-if="newAccount.hiboutikAccount">{{newAccount.hiboutikAccount.first_name}} {{newAccount.hiboutikAccount.last_name}}</div> 
+                           <div class="white title text-center w-xs" style="text-transform : capitalize; font-weigth : 100" v-if="newAccount.hiboutikAccount">{{newAccount.hiboutikAccount.first_name}} {{newAccount.hiboutikAccount.last_name}}</div> 
                         </div>
                       </div>
                     </div>
-                    <swag-input @keyup.enter="linkAccount" @input="accountCreationEmailChanged" v-model="newAccount.mail"
-                      placeholder="Entrez l'adresse e-mail associée à votre compte Silver-Smok" label="E-mail"
-                      id="account-creation-mail-input"></swag-input>
-                    <div class="flex">
+                       <swag-input @keyup.enter="focusInput('account-creation-repeat-password-input')" style="max-width : 350px" @input="accountCreationEmailChanged" v-model="newAccount.password"
+                      placeholder="Choisissez votre mot de passe" label="Mot de passe"
+                      id="account-creation-password-input" type="password"></swag-input>
+                       <swag-input @keyup.enter="createAccount" style="max-width : 350px" @input="accountCreationEmailChanged" v-model="newAccount.repeatPassword"
+                      placeholder="Confirmez votre mot de passe"
+                      id="account-creation-repeat-password-input" type="password"></swag-input>
+                     
+                    <div class="flex w-full">
                       <div class="flex-grow-1"></div>
-                      <button :disabled="!newAccount.validEmail || newAccount.tryingLinking" :class="newAccount.hiboutikAccount ? 'bg-success lt' : 'bg-heat'" class="button m-t" @click="linkAccount">
+                      <button :disabled="!newAccount.password.length || (newAccount.password !== newAccount.repeatPassword) || newAccount.creatingAccount" class="button m-t bg-heat" @click="createAccount">
                         <div class="flex" >
-                          <span v-if="newAccount.tryingLinking" class="spinner white active-element m-r-sm"></span>
-                          <span>{{newAccount.tryingLinkingString}}</span>
+                          <span v-if="newAccount.creatingAccount" class="spinner white active-element m-r-sm"></span>
+                          <span>{{newAccount.accountCreationString}}</span>
                         </div>
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div v-if="!newAccount.tryingLinking" class="product-name w-sm cursor-pointer">
+              <div :style="{'opacity' : newAccount.tryingLinking ? '0' : '1' }" class="product-name w-sm cursor-pointer">
                 <span style="text-decoration: underline;" @click="backToLoginPage">Annuler et revenir à la connexion</span>
               </div>
             </div>
@@ -110,10 +115,10 @@
 </template>
 
 <script lang="ts">
+  import fb from '@/services/firebase.ts'
   import Vue from 'vue';
   import SwagInput from '@/components/SwagInput.vue';
   import hb from '@/services/hiboutik.ts'
-  import fb from '@/services/firebase.ts'
   import { setTimeout } from 'timers';
 
   const validateEmail = (email: string) => {
@@ -121,63 +126,60 @@
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
   }
+  const loginDefault = {
+          mail: '',
+          password: '',
+          disableLogin: true,
+          error: '',
+          tryingLogin: false
+        }
+
+  const newAccountDefault = {
+          mail: '',
+          step: 1,
+          validEmail: false,
+          tryingLinking: false,
+          tryingLinkingString: 'Rechercher mon compte',
+          hiboutikAccount : null,
+          password : '',
+          repeatPassword : '',
+          creatingAccount : false,
+          accountCreationString : 'Créez votre espace'
+        }
 
   export default Vue.extend({
     components: {
-      SwagInput,
+      SwagInput
     },
     data() {
       return {
         showLoginWrapper: false,
         showLoginPanel: true,
         showCreateAccountPanel: false,
-        login: {
-          mail: '',
-          password: '',
-          disableLogin: true,
-          error: '',
-          tryingLogin: false
-        },
-        newAccount: {
-          mail: '',
-          step: 1,
-          validEmail: false,
-          tryingLinking: false,
-          tryingLinkingString: 'Lier mon compte',
-          hiboutikAccount : null
-        }
+        login: loginDefault,
+        newAccount: newAccountDefault
       };
     },
     methods: {
+      focusInput : function(selector:string){
+         const input = document.getElementById(selector)
+          input && input.focus()
+      },
       loginInputsChanged: function () {
-        this.login.disableLogin = !this.login.mail.length || !validateEmail(this.login.mail) || !this.login.password
-          .length
+        this.login.disableLogin = !this.login.mail.length || !this.login.password.length || !validateEmail(this.login.mail) 
       },
       backToLoginPage: function () {
         this.showCreateAccountPanel = false
-        this.login = {
-          mail: '',
-          password: '',
-          disableLogin: true,
-          error: '',
-          tryingLogin: false,
-        }
+        this.login = loginDefault
       },
-      createAccount: function () {
+      goToCreatingAccountProcess: function () {
         this.showLoginPanel = false
-        this.newAccount = {
-          mail: '',
-          step: 1,
-          validEmail: false,
-          tryingLinking: false,
-          tryingLinkingString: 'Lier mon compte',
-          hiboutikAccount : null
-        }
+        this.newAccount = newAccountDefault
       },
       afterLoginLeave: function () {
         this.showCreateAccountPanel = true
         setTimeout(() => {
-         this.backToLinkingStep()
+         this.backToLinkingStep(true)
         }, 600)
       },
       afterAccountCreationLeave: function () {
@@ -186,23 +188,25 @@
       accountCreationEmailChanged: function () {
         this.newAccount.validEmail = this.newAccount.mail.length > 0 && validateEmail(this.newAccount.mail)
       },
-      backToLinkingStep : function(){
+      backToLinkingStep : function(dontFocus:boolean = false){
         this.newAccount.step = 1
         this.newAccount.tryingLinking = false
         this.newAccount.hiboutikAccount = null
-        this.newAccount.tryingLinkingString = "Lier mon compte"
-        const input = document.getElementById('account-creation-mail-input')
-        input && input.focus()
+        this.newAccount.tryingLinkingString = "Rechercher mon compte"
+        if(!dontFocus){
+          this.focusInput('account-creation-mail-input')
+        }
       },
       linkAccount: function (event : any) {
         if (this.newAccount.validEmail && !this.newAccount.hiboutikAccount) {
           event.target.blur()
           this.newAccount.tryingLinking = true
           this.newAccount.tryingLinkingString = "Recherche du compte associé a l'e-mail..."
+          this.newAccount.mail = this.newAccount.mail.toLowerCase()
           const mail = this.newAccount.mail
           const now = Date.now()
           fb.callFunction('searchCustomerForLinking', {mail}).then((response:any) => {
-            if(response && response.data && response.data[0] && response.data[0].email === mail){
+            if(response && response.data && response.data[0] && response.data[0].email.toLowerCase() === mail){
               setTimeout(() => {
                 this.newAccount.tryingLinking = false
                 this.newAccount.hiboutikAccount = response.data[0]
@@ -210,7 +214,7 @@
                 setTimeout(() => {
                   this.newAccount.step = 2
                   console.log(this.newAccount.hiboutikAccount)
-                },2000)
+                },1500)
               },Math.max(0, 2000 - Date.now() + now))
               
             } else {
@@ -227,6 +231,20 @@
             this.backToLinkingStep()
           })
         }
+      },
+      createAccount : function(){
+        if(this.newAccount.password.length && this.newAccount.password === this.newAccount.repeatPassword){
+          this.newAccount.creatingAccount = true
+          this.newAccount.accountCreationString = 'Création de votre espace'
+          const hiboutikAccount:any = this.newAccount.hiboutikAccount!
+          fb.createAccount(this.newAccount.mail, this.newAccount.password, parseInt(hiboutikAccount.customers_id)).then(userCredentials => {
+            console.log(userCredentials)
+            this.newAccount.creatingAccount = false
+          }).catch((error:any) => {
+            console.log(error)
+            this.newAccount.creatingAccount = false
+          })
+        }
       }
     },
     mounted: function () {
@@ -240,12 +258,12 @@
 
 <style>
   .silversmok-card {
-    height: 230px;
-    width: 400px;
-    background: #f5f5f5;
-    border-radius: 10px;
-    margin: 5px 15px 15px 15px;
-    box-shadow: 0px 2px 7px rgba(0,0,0,.15);
+    height: 210px;
+    width: 350px;
+    background: white;
+    border-radius: 8px;
+    margin: 5px 0px 15px 0px;
+    box-shadow: 0px 1px 2px rgba(0,0,0,.15);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -258,7 +276,9 @@
     left : 0px;
     right : 0px;
     bottom : 0px;
-    border-radius : 10px;
+    border-radius : 8px;
+    pointer-events : none;
+    background: linear-gradient(to top, rgba(0,0,0,.05), rgba(255,255,255,.2));
     border : 1px solid rgba(0,0,0,.07)
   }
   .silversmok-card .card-header{
@@ -332,6 +352,9 @@
   }
 
   @media screen and (max-width: 630px) {
+    .text-center-sm{
+      text-align: center
+    }
     .account-creation-panel {
       max-width: calc(100vw - 30px);
     }

@@ -51,7 +51,7 @@
         return Object.assign({},
           this.$listeners,
           {
-            input: function (event) {
+            input: function (event:any) {
               vm.$emit('input', event.target.value)
             }
           }
