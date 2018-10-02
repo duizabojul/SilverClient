@@ -16,6 +16,9 @@ html, body, #app {
     color: #42b983;
   }
   
+  .overflow-auto {
+    overflow: auto
+  }
   
   .page-container {
     overflow : auto;
@@ -46,7 +49,8 @@ html, body, #app {
       z-index : -1
   }
   .white {
-    color : rgba(255,255,255,.9)
+    color : rgba(255,255,255,.9);
+    text-shadow: 0 1px 0px rgba(0,0,0,.1);
   }
   .cursor-pointer {
       cursor : pointer
@@ -158,6 +162,10 @@ html, body, #app {
   .purple-background {
     background-image : linear-gradient( -15deg, #CE9FFC 10%, #7367F0 100%)
   }
+
+  .purple-background.inversed {
+    background-image : linear-gradient( 125deg, #CE9FFC 10%, #7367F0 100%)
+  }
   
   .title {
     font-size: 1.5em;
@@ -192,13 +200,13 @@ html, body, #app {
   }
   
   .button {
-    padding: 6px 14px !important;
+    padding: 6px 14px;
     border: none;
-    border-radius: 4px;
-    color: #fff !important;
+    border-radius: 2px;
+    color: #fff;
     background: #23b7e5;
-    font-size: 14px !important;
-    display: flex !important;
+    font-size: 17px;
+    display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -211,7 +219,8 @@ html, body, #app {
   }
 
   .full-page-modal {
-    position : absolute ; 
+    position : absolute; 
+    overflow: auto;
     top : 0; 
     right : 0; 
     bottom : 0; 
@@ -247,15 +256,15 @@ html, body, #app {
   }
   
   .button.bg-heat, .bg-heat {
-    background: linear-gradient(165deg, #feb692, #faa07e, #f5896d, #f0705f, #ea5455) !important;
+    background: linear-gradient(165deg, #feb692, #faa07e, #f5896d, #f0705f, #ea5455);
     color: #fffcfb !important;
   }
   .button:hover {
     transform: translateY(-1px);
-    box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08) !important;
+    box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08);
   }
   .button.purple-background:hover {
-    box-shadow : 0 7px 14px rgba(156, 125, 249, 0.26), 0 3px 6px rgba(156, 125, 249, 0.26) !important;
+    box-shadow : 0 7px 14px rgba(156, 125, 249, 0.26), 0 3px 6px rgba(156, 125, 249, 0.26);
   }
   .button:active {
     transform: translateY(1px);
@@ -528,8 +537,17 @@ html, body, #app {
   }
   
   .bg-info.gradient{
-    background: linear-gradient(to right, #23b7e5, #36c4f1);
+    background: linear-gradient(-15deg, #008EE6, #79cbff);
     color : white;
+  }
+
+  .leave-element {
+    transition : .3s ease opacity;
+    opacity: 1;
+  }
+
+  .leave .leave-element{
+    opacity: 0;
   }
   
   .bg-heat.text, .bg-info.text,.bg-black.text,.bg-success.text,.bg-danger.text,.bg-warning.text,.bg-dark.text{

@@ -16,7 +16,7 @@ export default {};
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   display : flex;
-  font-size : 15px;
+  font-size : 16px;
   font-weight : 500;
   flex-direction: column
 }

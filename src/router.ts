@@ -15,28 +15,39 @@ const router = new Router({
     {
       path: '/login',
       name: 'login',
-      component: Login,
+      component: () => import(/* webpackChunkName: "login" */ './views/Login.vue'),
       meta : {
         requiresUnlogged : true
       }
     },
     {
-      path: '/home',
-      name: 'home',
-      component: () => import(/* webpackChunkName: "about" */ './views/Home.vue'),
+      path: '/verifyEmail',
+      name: 'verifyEmail',
+      component: () => import(/* webpackChunkName: "verifyEmail" */ './views/VerifyEmail.vue'),
       meta : {
         requiresLogged : true
+      }
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: () => import(/* webpackChunkName: "home" */ './views/Home.vue'),
+      meta : {
+        requiresVerified : true
       }
     },
   ],
 });
 
 router.beforeEach((to, from, next) => {
+  console.log()
   const currentUser = fb.auth.currentUser
-  if (to.matched.some(x => x.meta.requiresLogged) && !currentUser) {
+  if (to.matched.some(x => x.meta.requiresLogged || x.meta.requiresVerified) && !currentUser) {
       next('/login')
   } else if (to.matched.some(x => x.meta.requiresUnlogged) && currentUser) {
       next('/home')
+  } else if(to.matched.some(x => x.meta.requiresVerified) && currentUser && !currentUser.emailVerified) {
+    next('/verifyEmail')
   } else {
       next()
   }

@@ -1,8 +1,10 @@
 <template>
   <div class="field" v-bind:id="fieldId">
     <div class="field__input-wrapper">
+      <span v-if="type === 'password'" class="icon icon-lock"></span>
+       <span v-if="isEmail" class="icon icon-envelope"></span>
       <label class="field__label">{{labelComputed}}</label>
-      <input v-on="inputListeners" :style="{'font-size' : fontSize}" :type="type" autocomplete="nope" class="field__input" :placeholder="placeholder" :id="id">
+      <input :isEmail="isEmail" v-on="inputListeners" :style="{'font-size' : fontSize}" :type="type" autocomplete="nope" class="field__input" :placeholder="placeholder" :id="id">
     </div>
   </div>
 </template>
@@ -12,6 +14,7 @@
 
   export default Vue.extend({
     props: {
+
       id: String,
       placeholder: String,
       label: String,
@@ -23,7 +26,11 @@
       fontSize :{
         type : String,
         default : '16px'
-      }
+      },
+      isEmail: {
+        type : Boolean,
+        default : false
+       },
     },
     mounted:function(){
       this.input = document.getElementById(this.id)
@@ -75,6 +82,7 @@
 </script>
 
 <style>
+
   .field {
   width: 100%;
   padding : 7px 0;
@@ -147,14 +155,43 @@
   transition: all .2s cubic-bezier(.22,.61,.36,1)!important;
   border-radius: 3px;
 }
+
+.field__input[type="password"], .field__input[isEmail="true"] {
+  padding-left : 47px
+}
+
+.no-border .field__input {
+    border: 1px solid transparent;
+}
 .field .field--active .field__input {
   background: red;
   -webkit-transition: opacity 0s !important;
   transition: opacity 0s !important;
 }
 .field.field--active .field__input-wrapper:not(.field__input-wrapper--select) .field__input {
-  border: 1px solid #00b7dc;
+  border-color: #00b7dc;
   background : white;
   outline: none
 }
+.field.field--active.no-border .field__input-wrapper:not(.field__input-wrapper--select) .field__input {
+  border : 1px solid;
+  background : #f7f9fb;
+  border-color: #00b7dc;
+  outline: none
+}
+
+  .icon {
+        position: absolute;
+        font-size: 20px;
+    left: 15px;
+    top: calc(50% - 1px);
+    transform: translateY(-50%);
+    opacity: .7;
+    -webkit-transition: all .2s cubic-bezier(.22,.61,.36,1)!important;
+  transition: all .2s cubic-bezier(.22,.61,.36,1)!important;
+  }
+
+    .field.field--show-floating-label .icon {
+    top: calc(50% + 5px);
+  }
 </style>

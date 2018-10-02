@@ -105,7 +105,19 @@ const getUserData = () => {
     })
 }
 
-
+const sendEmailVerification = () =>{
+    return new Promise((resolve, reject) => {
+        if(auth.currentUser){
+            const location = window.location;
+            const url = `${location .protocol}//${location.host}/home`
+            console.log(url)
+            const settings = {url}
+            auth.currentUser.sendEmailVerification(settings).then(() => {resolve()}).catch(reject)
+        } else {
+            reject()
+        }
+    })
+}
 
 
 
@@ -122,6 +134,7 @@ export default {
     unlogUser,
     logUser,
     getObjectRef,
+    sendEmailVerification,
     createAccount : (email:string, password:string, hiboutikId : Number) => {
         return new Promise((resolve, reject) => {
             auth.createUserWithEmailAndPassword(email,password).then((userCredentials:firebase.auth.UserCredential) => {
@@ -129,7 +142,7 @@ export default {
                     const userRecord = {
                         id : hiboutikId
                     }
-                    Promise.all([getRef(`customersSpaces/${userCredentials.user.uid}`).set(userRecord), userCredentials.user.sendEmailVerification()]).then(() => {resolve()}).catch(reject)
+                    Promise.all([getRef(`customersSpaces/${userCredentials.user.uid}`).set(userRecord), sendEmailVerification()]).then(() => {resolve()}).catch(reject)
                 } else {
                     reject() 
                 }

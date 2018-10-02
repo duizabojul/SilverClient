@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1 v-if="userDetails">Bonjour {{userDetails.first_name}} {{userDetails.last_name}}. Vous avez {{nbPoints}}</h1>
+    <h1 v-if="userDetails">Bonjour {{userDetails.first_name}}. Vous avez {{nbPoints}}</h1>
     <button @click="unlog">Unlog</button>
     <div>
   </div>
@@ -22,7 +22,7 @@ import router from '@/router';
       }
     },
     methods : {
-      unlog : function(){
+      unlog: function(){
         fb.unlogUser().then(() => {
           router.push('login')
         })
