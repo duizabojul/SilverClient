@@ -2,7 +2,7 @@
   <div class="field" v-bind:id="fieldId">
     <div class="field__input-wrapper">
       <label class="field__label">{{labelComputed}}</label>
-      <input v-on="inputListeners" :type="type" autocomplete="nope" class="field__input" :placeholder="placeholder" :id="id">
+      <input v-on="inputListeners" :style="{'font-size' : fontSize}" :type="type" autocomplete="nope" class="field__input" :placeholder="placeholder" :id="id">
     </div>
   </div>
 </template>
@@ -19,7 +19,11 @@
         type : String,
         default : 'text'
        },
-      value: [String, Number]
+      value: [String, Number],
+      fontSize :{
+        type : String,
+        default : '16px'
+      }
     },
     mounted:function(){
       this.input = document.getElementById(this.id)
@@ -131,7 +135,7 @@
   font: inherit;
   margin: 0;
   font-size: 14px;
-  font-weight : 500;
+  font-weight : 400;
   -webkit-appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;

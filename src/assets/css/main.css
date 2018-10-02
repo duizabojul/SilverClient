@@ -150,6 +150,14 @@ html, body, #app {
   .w-full {
     width : 100%
   }
+
+  .h-full {
+    height : 100%
+  }
+
+  .purple-background {
+    background-image : linear-gradient( -15deg, #CE9FFC 10%, #7367F0 100%)
+  }
   
   .title {
     font-size: 1.5em;
@@ -162,6 +170,25 @@ html, body, #app {
   
   .absolute {
     position: absolute;
+  }
+
+  .close-modal {
+    position : absolute;
+    width : 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    top : 0;
+    padding: 20px;
+    max-width : 1100px;
+  }
+
+  .close-modal div {
+    font-size: 25px;
+    opacity: .7;
+  }
+
+  .close-modal div:hover{
+    opacity: 1;
   }
   
   .button {
@@ -182,6 +209,19 @@ html, body, #app {
     line-height : 1.5;
     cursor: pointer;
   }
+
+  .full-page-modal {
+    position : absolute ; 
+    top : 0; 
+    right : 0; 
+    bottom : 0; 
+    left : 0; 
+    background : white; 
+    z-index : 2;
+    display: flex;
+    justify-content: center;
+    align-items: center
+  }
   .button.button-cancel-white, .button.button-cancel {
     background: transparent;
     color: rgb(38, 43, 45) !important
@@ -200,6 +240,11 @@ html, body, #app {
   .button.bg-heat {
     border : none !important
   }
+
+  .button.purple-background {
+    background-image : linear-gradient( 125deg, #CE9FFC 10%, #7367F0 100%);
+    box-shadow : 0 4px 6px rgba(156, 125, 249, 0.26), 0 1px 3px rgba(156, 125, 249, 0.26);
+  }
   
   .button.bg-heat, .bg-heat {
     background: linear-gradient(165deg, #feb692, #faa07e, #f5896d, #f0705f, #ea5455) !important;
@@ -208,6 +253,9 @@ html, body, #app {
   .button:hover {
     transform: translateY(-1px);
     box-shadow: 0 7px 14px rgba(50, 50, 93, .1), 0 3px 6px rgba(0, 0, 0, .08) !important;
+  }
+  .button.purple-background:hover {
+    box-shadow : 0 7px 14px rgba(156, 125, 249, 0.26), 0 3px 6px rgba(156, 125, 249, 0.26) !important;
   }
   .button:active {
     transform: translateY(1px);
