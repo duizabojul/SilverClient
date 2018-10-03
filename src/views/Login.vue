@@ -1,51 +1,39 @@
 <template>
   <div id="home-page" class="page-container">
     <transition name="slide-up-fade">
-      <div class="full-page-modal" :class="newAccount.step === 3 ? 'leave' : ''" v-if="newAccount.hiboutikAccount">
-        <div class="close-modal leave-element" >
+      <div class="full-page-modal" :class="newAccount.step === 2 ? 'leave' : ''" v-if="newAccount.hiboutikAccount">
+        <div class="close-modal leave-element">
           <div @click="newAccount.hiboutikAccount = null" class="icon-close"></div>
         </div>
         <div class="flex-column f-center-v w-lg w-full" style="max-width : 430px; margin : 40px 0">
-          <h1 style="font-size : 30px" class="leave-element">Plus qu'une chose...</h1>
+          <h1 style="font-size : 30px" class="leave-element">Une dernière chose...</h1>
           <div class="f-center flex-grow-1 w-full">
-            <div id="silversmok-card" :class="newAccount.step === 2 ? 'backface' : ''">
+            <div id="silversmok-card">
               <div class="flip-card-inner">
                 <div class="flip-card-front">
                   <div class="card-header">
-                    <div class="" style="    padding : 5px 0 3px ; text-transform: capitalize;
-    font-size: 20px;
-    font-weight: 700;"
-                      >{{newAccount.hiboutikAccount.first_name}}
-                      {{newAccount.hiboutikAccount.last_name}}</div>
+                    {{newAccount.hiboutikAccount.first_name}} {{newAccount.hiboutikAccount.last_name}}
+                  </div>
+                  <div class="f-center flex-grow-1 w-lg flex-column">
+                    <swag-input @keyup.enter="focusInput('account-creation-repeat-password-input')" style="max-width : 350px"
+                      @input="accountCreationEmailChanged" class="no-border" v-model="newAccount.password" placeholder="Créez votre mot de passe"
+                      id="account-creation-password-input" type="password"></swag-input>
+                    <swag-input @keyup.enter="createAccount" class="no-border" style="max-width : 350px" @input="accountCreationEmailChanged"
+                      v-model="newAccount.repeatPassword" placeholder="Confirmez votre mot de passe" id="account-creation-repeat-password-input"
+                      type="password"></swag-input>
+                  </div>
+                </div>
+                <div class="flip-card-back">
+                  <div class="card-header">
+                    {{newAccount.hiboutikAccount.first_name}} {{newAccount.hiboutikAccount.last_name}}
                   </div>
                   <div class="flex-grow-1 f-center">
                     <img srcset="../assets/silver-smok-logo-2x.png 2x" src="../assets/silver-smok-logo.png" style="height : 140px">
                   </div>
-                  
-                </div>
-
-                <div class="flip-card-back">
-                  <div class="card-header">
-                    <div class="" style="    padding : 5px 0 3px ; text-transform: capitalize;
-    font-size: 20px;
-    font-weight: 700;"
-                      >{{newAccount.hiboutikAccount.first_name}}
-                      {{newAccount.hiboutikAccount.last_name}}</div>
-                  </div>
-                  <div class="f-center w-lg flex-column">
-                  <swag-input @keyup.enter="focusInput('account-creation-repeat-password-input')" style="max-width : 350px"
-                    @input="accountCreationEmailChanged"  class="no-border" v-model="newAccount.password" placeholder="Votre mot de passe"
-                   id="account-creation-password-input" type="password"></swag-input>
-                  <swag-input @keyup.enter="createAccount" class="no-border"  style="max-width : 350px" @input="accountCreationEmailChanged"
-                    v-model="newAccount.repeatPassword" placeholder="Confirmez votre mot de passe" id="account-creation-repeat-password-input"
-                    type="password"></swag-input>
-                    </div>
-                    
                 </div>
               </div>
             </div>
           </div>
-
           <div class="flex w-full">
             <button class="button w-full purple-background leave-element" @click="createAccount">
               <div class="flex">
@@ -57,11 +45,34 @@
         </div>
       </div>
     </transition>
+    <transition name="slide-up-fade">
+      <div class="full-page-modal" :class="newAccount.step === 2 ? 'leave' : ''" v-show="login.showLogin">
+        <div class="close-modal leave-element">
+          <div @click="login.showLogin = false" class="icon-close"></div>
+        </div>
+        <div class="flex-column f-center-v w-lg w-full" style="max-width : 430px; margin : 40px 0">
+          <h1 style="font-size : 30px" class="leave-element text-center">{{login.loginText}}</h1>
+          <div class="flex-column w-full">
+            <swag-input ref="loginMailInput" v-bind:isEmail="true" @keyup.enter="focusInput('login-password-input')"
+              v-model="login.mail" placeholder="Entrez votre e-mail..." label="E-mail" id="login-mail-input"></swag-input>
+            <swag-input @keyup.enter="logUser" v-model="login.password" type="password" placeholder="Entrez votre mot de passe..."
+              label="Mot de passe" id="login-password-input"></swag-input>
+          </div>
+          <div class="flex w-full">
+            <button @click="logUser" class="button purple-background w-full m-t-sm m-b-sm">
+              <span v-if="!login.tryingLogin">Me connecter à mon espace</span>
+              <div v-if="login.tryingLogin" class="spinner absolute-center white active-element">
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
     <div class="header f-center-h">
       <div class="header-container f-center-v">
         <h1>Silver-Smok<span>Fidélité</span></h1>
         <div class="flex-grow-1"></div>
-        <div class="connect-button">Connexion</div>
+        <div class="connect-button" @click="showLoginPage">Connexion</div>
       </div>
     </div>
     <div class="f-wrap h-full overflow-auto">
@@ -184,9 +195,12 @@
     return re.test(String(email).toLowerCase());
   }
   const loginDefault = {
+    showLogin: false,
+    loginText: 'Connexion',
+    uid: < any > null,
+    hiboutikId: < any > null,
     mail: '',
     password: '',
-    disableLogin: true,
     error: '',
     tryingLogin: false
   }
@@ -197,7 +211,7 @@
     password: '',
     repeatPassword: '',
     creatingAccount: false,
-    accountCreationString: 'Définir mon mot de passe'
+    accountCreationString: 'Créer mon espace'
   }
 
   export default Vue.extend({
@@ -209,20 +223,39 @@
         showLoginWrapper: false,
         showLoginPanel: true,
         showCreateAccountPanel: false,
-        login: loginDefault,
-        newAccount: Object.assign({},newAccountDefault),
-        mail : '',
-        tryingLinking : false,
-        validEmail : false
+        login: Object.assign({}, loginDefault),
+        newAccount: Object.assign({}, newAccountDefault),
+        mail: '',
+        tryingLinking: false,
+        validEmail: false
       };
     },
     methods: {
+      showLoginPage: function () {
+        this.login.loginText = 'Connexion'
+        this.login.uid = null
+        this.login.hiboutikId = null
+        this.login.error = ''
+        this.login.showLogin = true
+        setTimeout(() => {
+          this.focusInput('login-mail-input')
+        }, 300)
+      },
       logUser: function () {
         if (this.login.mail.length && this.login.password.length && validateEmail(this.login.mail)) {
           this.login.tryingLogin = true
           fb.logUser(this.login.mail, this.login.password).then(() => {
-            this.login.tryingLogin = false
-            router.push('/home')
+            if (this.login.uid) {
+              fb.createSpace(this.login.uid, this.login.hiboutikId).then(() => {
+                this.login.tryingLogin = false
+                router.push('/home')
+              }).catch(() => {
+                this.login.tryingLogin = false
+              })
+            } else {
+              this.login.tryingLogin = false
+              router.push('/home')
+            }
           }).catch(error => {
             console.log(error)
             this.login.tryingLogin = false
@@ -234,10 +267,6 @@
         const input = document.getElementById(elementId)
         input && input.focus()
       },
-      loginInputsChanged: function () {
-        this.login.disableLogin = !this.login.mail.length || !this.login.password.length || !validateEmail(this.login
-          .mail)
-      },
       accountCreationEmailChanged: function () {
         this.validEmail = this.mail.length > 0 && validateEmail(this.mail)
       },
@@ -248,13 +277,37 @@
           this.mail = this.mail.toLowerCase()
           const mail = this.mail
           fb.callFunction('searchCustomerForLinking', {mail}).then((response: any) => {
-            if (response && response.data && response.data[0] && response.data[0].email.toLowerCase() ===
-              mail) {
-              this.newAccount = Object.assign({},newAccountDefault)
-              this.newAccount.hiboutikAccount = response.data[0]
-              console.log(this.newAccount.hiboutikAccount)
+            const customerData = response.data.customerData
+            if (!response.data.uid) {
+              if (customerData && customerData.email.toLowerCase() === mail) {
+                this.newAccount = Object.assign({}, newAccountDefault)
+                this.newAccount.hiboutikAccount = response.data.customerData
+                setTimeout(() => {
+                  this.focusInput('account-creation-password-input')
+                }, 300)
+              } else if (!customerData) {
+
+              }
+            } else {
+              if (customerData && customerData.email.toLowerCase() === mail) {
+                this.login.uid = response.data.uid
+                this.login.hiboutikId = parseInt(customerData.customers_id)
+                this.login.mail = mail
+                this.login.loginText = "Connectez vous pour créer votre espace"
+                this.login.showLogin = true
+                setTimeout(() => {
+                  this.focusInput('login-password-input')
+                }, 300)
+              } else if (!customerData) {
+                this.login.mail = mail
+                this.login.showLogin = true
+                setTimeout(() => {
+                  this.focusInput('login-password-input')
+                }, 300)
+              }
             }
           }).catch((e: any) => {
+            console.log(e)
             if (e && e.code) {
               if (e.code === 'already-exists') {
 
@@ -268,31 +321,22 @@
         }
       },
       createAccount: function () {
-        if (this.newAccount.step === 1) {
-          this.newAccount.step = 2
-          this.newAccount.accountCreationString = 'Créer mon espace'
-          setTimeout(() => {
-            this.focusInput('account-creation-password-input')
-          },150)
-        } else {
-          if (this.newAccount.password.length && this.newAccount.password === this.newAccount.repeatPassword) {
-            this.newAccount.creatingAccount = true
-            this.newAccount.accountCreationString = "Création de votre espace..."
-            const hiboutikAccount: any = this.newAccount.hiboutikAccount!
-              fb.createAccount(this.mail, this.newAccount.password, parseInt(hiboutikAccount.customers_id))
-              .then(userCredentials => {
-                this.newAccount.creatingAccount = false
-                this.newAccount.step = 3
-                setTimeout(() => {
-                  router.push('/verifyEmail')
-                },1300)
-              }).catch((error: any) => {
-                console.log(error)
-                this.newAccount.creatingAccount = false
-              })
-          }
+        if (this.newAccount.password.length && this.newAccount.password === this.newAccount.repeatPassword) {
+          this.newAccount.creatingAccount = true
+          this.newAccount.accountCreationString = "Création de votre espace..."
+          const hiboutikAccount: any = this.newAccount.hiboutikAccount!
+            fb.createAccount(this.mail, this.newAccount.password, parseInt(hiboutikAccount.customers_id))
+            .then(userCredentials => {
+              this.newAccount.creatingAccount = false
+              this.newAccount.step = 2
+              setTimeout(() => {
+                router.push('/verifyEmail')
+              }, 1800)
+            }).catch((error: any) => {
+              console.log(error)
+              this.newAccount.creatingAccount = false
+            })
         }
-
       }
     },
     mounted: function () {
@@ -301,7 +345,6 @@
       }, 100)
     }
   });
-
 </script>
 
 <style>
@@ -373,13 +416,32 @@
   .connect-button {
     color: white;
     position: relative;
-    top: -7px;
+    top: -4px;
+    border: 1px solid rgba(255, 255, 255, .45);
+    border-radius: 4px;
+    padding: 5px 15px;
+    background: transparent;
+    transition: .15s ease all;
+    cursor: pointer
+  }
+
+  .connect-button:hover {
+    background: rgba(0, 0, 0, 0.1);
+    border-color: transparent;
+  }
+
+  .connect-button:active {
+    background: rgba(0, 0, 0, .2);
+    border-color: transparent;
   }
 
   @media screen and (max-width: 950px) {
     .connect-button {
-      color: #333;
-      top: 0
+      color: #7765f3;
+      top: -1px;
+      border-color: #7765f3;
+      padding: 1px 10px;
+      font-size: 15px;
     }
 
     #left-container {
@@ -438,22 +500,22 @@
     width: 100%;
     position: relative;
     z-index: 2;
-    margin: 15px 0px 45px 0px;
+    margin: 15px 0px 35px 0px;
     perspective: 1000px;
     transform: translateY(0);
-    transition : .4s cubic-bezier(0.55, 0.06, 0.68, 0.19) all;
+    transition: .4s cubic-bezier(0.55, 0.06, 0.68, 0.19) all;
     will-change: transform;
   }
 
   .full-page-modal.leave #silversmok-card {
-    transition-delay: .5s;
+    transition-delay: .9s;
     transform: translateY(-100vh);
   }
 
   .full-page-modal.leave {
     overflow: hidden;
   }
-  
+
 
   #silversmok-card:after {
     position: absolute;
@@ -475,13 +537,13 @@
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: all .66s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition: all .66s cubic-bezier(0.25, 0.8, 0.25, 1.1);
     transform-style: preserve-3d;
     will-change: transform;
   }
 
   /* Do an horizontal flip when you move the mouse over the flip box container */
-  .full-page-modal:not(.leave) #silversmok-card.backface .flip-card-inner {
+  .full-page-modal.leave #silversmok-card .flip-card-inner {
     transform: rotateY(180deg);
   }
 
@@ -495,7 +557,6 @@
     height: 100%;
     background: white;
     border-radius: 8px;
-    overflow: hidden;
     backface-visibility: hidden;
   }
 
@@ -508,8 +569,12 @@
   }
 
   #silversmok-card .card-header {
-    margin : 0 20px;
-    border-bottom: 1px solid #f1f1f1
+    margin: 0 20px;
+    border-bottom: 1px solid #f1f1f1;
+    padding: 5px 0 3px;
+    text-transform: capitalize;
+    font-size: 20px;
+    font-weight: 700;
   }
 
   .horizontal-slider {
@@ -608,5 +673,4 @@
   .account-creation-state.active .account-state-number {
     background: #23b7e5;
   }
-
 </style>

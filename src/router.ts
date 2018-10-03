@@ -25,7 +25,7 @@ const router = new Router({
       name: 'verifyEmail',
       component: () => import(/* webpackChunkName: "verifyEmail" */ './views/VerifyEmail.vue'),
       meta : {
-        requiresLogged : true
+        requiresNotVerified : true
       }
     },
     {
@@ -42,14 +42,16 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   console.log()
   const currentUser = fb.auth.currentUser
-  if (to.matched.some(x => x.meta.requiresLogged || x.meta.requiresVerified) && !currentUser) {
+  if (to.matched.some(x => x.meta.requiresNotVerified || x.meta.requiresVerified) && !currentUser) {
       next('/login')
   } else if (to.matched.some(x => x.meta.requiresUnlogged) && currentUser) {
       next('/home')
   } else if(to.matched.some(x => x.meta.requiresVerified) && currentUser && !currentUser.emailVerified) {
     next('/verifyEmail')
+  } else if(to.matched.some(x => x.meta.requiresNotVerified) && currentUser && currentUser.emailVerified) {
+    next('/home')
   } else {
-      next()
+    next()
   }
 })
 

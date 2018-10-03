@@ -4,7 +4,7 @@
       <span v-if="type === 'password'" class="icon icon-lock"></span>
        <span v-if="isEmail" class="icon icon-envelope"></span>
       <label class="field__label">{{labelComputed}}</label>
-      <input :isEmail="isEmail" v-on="inputListeners" :style="{'font-size' : fontSize}" :type="type" autocomplete="nope" class="field__input" :placeholder="placeholder" :id="id">
+      <input ref="input" :isEmail="isEmail" v-on="inputListeners" :style="{'font-size' : fontSize}" :type="type" autocomplete="nope" class="field__input" :placeholder="placeholder" :id="id">
     </div>
   </div>
 </template>
@@ -33,6 +33,7 @@
        },
     },
     mounted:function(){
+      var vm = this
       this.input = document.getElementById(this.id)
         this.input.addEventListener('focus', () => {
           this.input.closest('.field').classList.add('field--active')
@@ -40,7 +41,7 @@
         this.input.addEventListener('blur', () => {
           this.input.closest('.field').classList.remove('field--active')
         })
-        const changeEvents = ['keyup', 'paste', 'change' ,'focus', 'blur', 'keydown']
+        const changeEvents = ['input', 'keyup', 'paste', 'change' ,'focus', 'blur', 'keydown']
         changeEvents.forEach(event => {
           this.input.addEventListener(event, () => {
           if (this.input.value.length != 0) {
@@ -50,10 +51,18 @@
           }
         })
       })
+    
+      
     },
     data() {
       return {
         input : <any> null
+      }
+    },
+    watch: {
+      value(v) {
+        this.input.value = v
+        this.input.dispatchEvent(new Event('input'));
       }
     },
     computed: {
@@ -76,7 +85,6 @@
       } 
     },
     methods: {
-       
     }
   });
 </script>

@@ -119,6 +119,12 @@ const sendEmailVerification = () =>{
     })
 }
 
+const createSpace = (uid:String, hiboutikId:Number) => {
+    const userRecord = {
+        id : hiboutikId
+    }
+    return getRef(`customersSpaces/${uid}`).set(userRecord)
+}
 
 
 
@@ -135,14 +141,12 @@ export default {
     logUser,
     getObjectRef,
     sendEmailVerification,
+    createSpace,
     createAccount : (email:string, password:string, hiboutikId : Number) => {
         return new Promise((resolve, reject) => {
             auth.createUserWithEmailAndPassword(email,password).then((userCredentials:firebase.auth.UserCredential) => {
                 if(userCredentials && userCredentials.user){
-                    const userRecord = {
-                        id : hiboutikId
-                    }
-                    Promise.all([getRef(`customersSpaces/${userCredentials.user.uid}`).set(userRecord), sendEmailVerification()]).then(() => {resolve()}).catch(reject)
+                    Promise.all([createSpace(userCredentials.user.uid, hiboutikId), sendEmailVerification()]).then(() => {resolve()}).catch(reject)
                 } else {
                     reject() 
                 }
