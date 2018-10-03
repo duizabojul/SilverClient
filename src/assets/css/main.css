@@ -19,9 +19,18 @@ html, body, #app {
   .overflow-auto {
     overflow: auto
   }
+
+  .header-container {
+    max-width: 1100px;
+    width: 100%;
+    padding: 20px;
+    display: flex
+  }
+
   
   .page-container {
     overflow : auto;
+    min-height: 100vh;
   }
   
   .absolute-center {
@@ -30,6 +39,49 @@ html, body, #app {
     left : 50%;
     transform : translate(-50%, -50%)
   }
+
+  .outlined-button {
+    color: #7765f3;
+    border: 1px solid #7765f3;
+    border-radius: 4px;
+    padding: 5px 15px;
+    background: transparent;
+    transition: .15s ease all;
+    cursor: pointer
+  }
+
+  .outlined-button:hover {
+    background: #7765f3;
+    color : white
+  }
+
+  .outlined-button:active {
+    background: #5443c7;
+    color : white
+  }
+
+  .bold {
+    font-weight: bold
+  }
+
+  .subtitle {
+    font-size: 22px;
+    margin-left: 1px;
+    font-weight: 400;
+    opacity: .7;
+    line-height: 1.4;
+    margin-bottom: 15px
+  }
+
+  @media screen and (max-width: 600px) {
+    .outlined-button {
+      padding: 3px 5px;
+      font-size: 15px;
+    }
+    .subtitle {
+      font-size: 18px
+    }
+  }   
   
   .text-center {
     text-align : center

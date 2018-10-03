@@ -42,17 +42,17 @@ const getObjectRef = (ref:string) => {
                 if(this.$resolved){
                     resolve(this)
                 } else {
-                  this.resolvePromises.push(resolve)
+                    this.resolvePromises.push(resolve)
                 }
             })
         },
         destroy : function() {
-          this.ref.off()
-          this.val = null
-          this.$resolved = false
+            this.ref.off()
+            this.val = null
+            this.$resolved = false
         }
-      }
-      object.ref.once('value').then((snapshot : firebase.database.DataSnapshot) => {
+    }
+    object.ref.once('value').then((snapshot : firebase.database.DataSnapshot) => {
         object.val = snapshot.val()
         object.$resolved = true
         object.resolvePromises.forEach((resolve:any) => {
@@ -109,12 +109,10 @@ const sendEmailVerification = () =>{
     return new Promise((resolve, reject) => {
         if(auth.currentUser){
             const location = window.location;
-            const url = `${location .protocol}//${location.host}/home`
-            console.log(url)
-            const settings = {url}
+            const settings = {url : `${location .protocol}//${location.host}/home`}
             auth.currentUser.sendEmailVerification(settings).then(() => {resolve()}).catch(reject)
         } else {
-            reject()
+            reject('NO_USER')
         }
     })
 }

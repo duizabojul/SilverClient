@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
 
-import {
-  register
-} from 'register-service-worker';
+import { register } from 'register-service-worker';
 
 if (process.env.NODE_ENV === 'production') {
   register(`${process.env.BASE_URL}service-worker.js`, {
@@ -14,13 +12,7 @@ if (process.env.NODE_ENV === 'production') {
       console.log('Content has been cached for offline use.');
     },
     updated() {
-      caches.keys().then((cacheNames) => {
-        return Promise.all(
-          cacheNames.map(cacheName => {
-            return caches.delete(cacheName);
-          })
-        );
-      })
+      caches.keys().then(cacheNames => Promise.all(cacheNames.map(cacheName => caches.delete(cacheName))));
       console.log('New content is available; please refresh.');
     },
     offline() {

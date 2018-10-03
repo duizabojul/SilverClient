@@ -100,83 +100,6 @@
         </div>
       </div>
     </div>
-
-    <!-- <transition name="slide-up-fade">
-      <div id="login-wrapper" style="display : none" v-if="showLoginWrapper">
-        <div class="flex-column f-center-v w w-t-0">
-          <h1 class="white m-t-0 m-b">Silver-Smok</h1>
-          <transition @after-leave="afterLoginLeave" name='slide-up-fade'>
-            <div class="panel login-panel" v-if="showLoginPanel">
-              <div class="m-b-sm text-center">
-                <strong>Entrez vos identifiants pour vous connecter</strong>
-              </div>
-              <div class="text-danger w-xs f-center-h text-center" style="color: white;background: rgb(239, 109, 93);border-radius: 3px;margin-bottom: 5px;font-size: 13px;font-weight: 500; margin : 0 7px"
-                v-if="login.error">
-                {{login.error}}
-              </div>
-              <swag-input @keyup.enter="focusInput('login-password-input')" @input="loginInputsChanged" v-model="login.mail"
-                placeholder="Entrez votre e-mail..." label="E-mail" id="login-mail-input"></swag-input>
-              <swag-input @keyup.enter="logUser" @input="loginInputsChanged" v-model="login.password" type="password"
-                placeholder="Entrez votre mot de passe..." label="Mot de passe" id="login-password-input"></swag-input>
-              <button :disabled="login.disableLogin" @click="logUser" class="button lg m-auto w-full m-auto m-t-sm m-b-sm">
-                <span v-if="!login.tryingLogin">Me connecter à mon espace</span>
-                <div v-if="login.tryingLogin" class="spinner absolute-center white active-element">
-                </div>
-              </button>
-              <div class="b-t m-t-lg flex-column f-center-v relative w-t-lg">
-                <div class="login-separator">OU</div>
-                <div class="m-b-sm text-center">
-                  <strong>Vous avez un compte fidélité dans une boutique Silver-Smok. Créez votre espace en ligne en 30
-                    secondes !</strong>
-                </div>
-                <button @click="goToCreatingAccountProcess" class="button lg m-auto bg-heat w-full m-auto m-t-xs m-b-0">Créer
-                  mon espace Silver-Smok
-                </button>
-              </div>
-            </div>
-          </transition>
-          <transition @after-leave="afterAccountCreationLeave" name='slide-up-fade'>
-            <div v-if="showCreateAccountPanel">
-              <div class="login-panel account-creation-panel panel">
-                <div class="w bg-info gradient text-center-sm" style="font-size: 17px;font-weight: 700;padding-left: 20px;">
-                  Création de votre espace Silver-Smok
-                </div>
-                <div class="w-sm bg-black lter flex f-wrap" style="justify-content: space-around;">
-                  <div @click="newAccount.step = 1" :class="{'active' : newAccount.step === 1}" class="flex-shrink-0 account-creation-state f-center-v w-t-xs w-b-xs">
-                    <span class="account-state-number">1</span>Liez votre compte
-                  </div>
-                  <div @click="newAccount.step = 2" :class="{'active' : newAccount.step === 2}" class="flex-shrink-0 account-creation-state f-center-v w-t-xs w-b-xs">
-                    <span class="account-state-number">2</span>Créez votre mot de passe
-                  </div>
-                </div>
-                <div class="horizontal-slider" :class="newAccount.step === 2 ? 'step-2' : ''">
-                  <div class="flex-column w-lg">
-                    <ul class="w-l-lg m-t-xs flex-column flex-grow-1" style="justify-content : space-evenly">
-                      <li>Afin de créer votre espace Silver-Smok, vous devez au préalable avoir un compte fidélité
-                        Silver-Smok dans une boutique, et communiqué votre adresse e-mail au vendeur.</li>
-                      <li class="m-t">Si vous avez un compte fidélité mais que vous n'avez pas communiqué votre adresse
-                        e-mail, vous pouvez vous rendre en boutique ou demander de l'aide à un conseiller sur la
-                        chatbox
-                        en bas à droite de l'écran.</li>
-                      <li class="m-t">Entrez l'adresse e-mail associée à votre compte Silver-Smok afin que nous
-                        puissions rechercher et lier votre compte. </li>
-                    </ul>
-                    <div class="flex">
-                      <div class="flex-grow-1"></div>
-
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-              <div :style="{'opacity' : newAccount.tryingLinking ? '0' : '1' }" class="product-name w-sm cursor-pointer">
-                <span style="text-decoration: underline;" @click="backToLoginPage">Annuler et revenir à la connexion</span>
-              </div>
-            </div>
-          </transition>
-        </div>
-      </div>
-    </transition> -->
   </div>
 </template>
 
@@ -186,9 +109,6 @@
   import SwagInput from '@/components/SwagInput.vue';
   import hb from '@/services/hiboutik.ts'
   import router from '@/router';
-  import {
-    setTimeout
-  } from 'timers';
 
   const validateEmail = (email: string) => {
     var re =
@@ -357,13 +277,6 @@
     right: 0;
   }
 
-  .header-container {
-    max-width: 1100px;
-    width: 100%;
-    padding: 20px;
-    display: flex
-  }
-
   #home-page .header-container h1 {
     font-size: 30px;
     line-height: 30px;
@@ -390,15 +303,6 @@
     font-weight: 700;
     line-height: 50px;
     margin-bottom: 10px
-  }
-
-  .subtitle {
-    font-size: 22px;
-    margin-left: 1px;
-    font-weight: 400;
-    opacity: .7;
-    line-height: 1.4;
-    margin-bottom: 15px
   }
 
 
@@ -473,7 +377,6 @@
       font-size: 35px;
       line-height: 35px;
     }
-
     .subtitle {
       font-size: 18px
     }
