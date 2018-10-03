@@ -15,7 +15,7 @@
                     {{newAccount.hiboutikAccount.first_name}} {{newAccount.hiboutikAccount.last_name}}
                   </div>
                   <div class="f-center flex-grow-1 w-lg flex-column">
-                  <div class="label"><span class="icon-info m-r-xs top-1px"></span>Le mot de passe doit contenir au moins 6 caractères</div>
+                  <div class="label"><span class="icon-info m-r-xs top-1px"></span>Veuillez créer un mot de passe d'au moins 6 caractères</div>
                     <swag-input @keyup.enter="focusInput('account-creation-repeat-password-input')" style="max-width : 350px"
                       @input="accountCreationEmailChanged" class="no-border" v-model="newAccount.password" placeholder="Créez votre mot de passe"
                       id="account-creation-password-input" type="password"></swag-input>
