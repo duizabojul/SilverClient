@@ -6,7 +6,7 @@
           <div @click="newAccount.hiboutikAccount = null" class="icon-close"></div>
         </div>
         <div class="flex-column f-center-v w-lg w-full" style="max-width : 430px; margin : 40px 0">
-          <h1 style="font-size : 30px" class="leave-element">Une dernière chose...</h1>
+          <h1 style="font-size : 30px" class="leave-element text-center">Une dernière chose...</h1>
           <div class="f-center flex-grow-1 w-full">
             <div id="silversmok-card">
               <div class="flip-card-inner">
@@ -15,6 +15,7 @@
                     {{newAccount.hiboutikAccount.first_name}} {{newAccount.hiboutikAccount.last_name}}
                   </div>
                   <div class="f-center flex-grow-1 w-lg flex-column">
+                  <div class="label"><span class="icon-info m-r-xs top-1px"></span>Le mot de passe doit contenir au moins 6 caractères</div>
                     <swag-input @keyup.enter="focusInput('account-creation-repeat-password-input')" style="max-width : 350px"
                       @input="accountCreationEmailChanged" class="no-border" v-model="newAccount.password" placeholder="Créez votre mot de passe"
                       id="account-creation-password-input" type="password"></swag-input>
@@ -500,7 +501,7 @@
     width: 100%;
     position: relative;
     z-index: 2;
-    margin: 15px 0px 35px 0px;
+    margin: 15px 0px;
     perspective: 1000px;
     transform: translateY(0);
     transition: .4s cubic-bezier(0.55, 0.06, 0.68, 0.19) all;
@@ -553,6 +554,7 @@
     display: flex;
     flex-direction: column;
     position: absolute;
+    z-index: 1;
     width: 100%;
     height: 100%;
     background: white;

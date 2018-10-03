@@ -218,6 +218,16 @@ html, body, #app {
     cursor: pointer;
   }
 
+  .label {
+    font-size: 13px;
+    opacity: .6;
+  }
+
+  .top-1px{
+    position: relative;
+    top : 1px
+  }
+
   .full-page-modal {
     position : absolute; 
     overflow: auto;
