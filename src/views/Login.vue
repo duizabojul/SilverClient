@@ -15,7 +15,8 @@
                     {{newAccount.hiboutikAccount.first_name}} {{newAccount.hiboutikAccount.last_name}}
                   </div>
                   <div class="f-center flex-grow-1 w-lg flex-column">
-                  <div class="label"><span class="icon-info m-r-xs top-1px"></span>Veuillez créer un mot de passe d'au moins 6 caractères</div>
+                    <div class="label"><span class="icon-info m-r-xs top-1px"></span>Veuillez créer un mot de passe
+                      d'au moins 6 caractères</div>
                     <swag-input @keyup.enter="focusInput('account-creation-repeat-password-input')" style="max-width : 350px"
                       @input="accountCreationEmailChanged" class="no-border" v-model="newAccount.password" placeholder="Créez votre mot de passe"
                       id="account-creation-password-input" type="password"></swag-input>
@@ -49,23 +50,24 @@
     <transition name="slide-up-fade">
       <div class="full-page-modal" :class="newAccount.step === 2 ? 'leave' : ''" v-show="login.showLogin">
         <div class="close-modal leave-element">
-          <div @click="login.showLogin = false" class="icon-close"></div>
+          <div @click="closeLoginPage" class="icon-close"></div>
         </div>
         <div class="flex-column f-center-v w-lg w-full" style="max-width : 430px; margin : 40px 0">
-          <h1 style="font-size : 30px" class="leave-element text-center">{{login.loginText}}</h1>
+          <h1 style="font-size : 25px" class="leave-element text-center">{{login.loginText}}</h1>
           <div class="flex-column w-full">
-            <swag-input ref="loginMailInput" v-bind:isEmail="true" @keyup.enter="focusInput('login-password-input')"
+            <swag-input ref="loginMailInput" v-bind:isEmail="true" @keyup.enter="enterKeyOnLoginMailInput"
               v-model="login.mail" placeholder="Entrez votre e-mail..." label="E-mail" id="login-mail-input"></swag-input>
-            <swag-input @keyup.enter="logUser" v-model="login.password" type="password" placeholder="Entrez votre mot de passe..."
-              label="Mot de passe" id="login-password-input"></swag-input>
+            <swag-input v-if="!login.passwordReset" @keyup.enter="logUser" v-model="login.password" type="password"
+              placeholder="Entrez votre mot de passe..." label="Mot de passe" id="login-password-input"></swag-input>
           </div>
           <div class="flex w-full">
-            <button @click="logUser" class="button purple-background w-full m-t-sm m-b-sm">
-              <span v-if="!login.tryingLogin">Me connecter à mon espace</span>
+            <button @click="login.resetPassword ? resetPassword() : logUser()" class="button purple-background w-full m-t-sm m-b-sm">
+              <span v-if="!login.tryingLogin">{{login.loginButtonString}}</span>
               <div v-if="login.tryingLogin" class="spinner absolute-center white active-element">
               </div>
             </button>
           </div>
+          <div class="forgotten-password" @click="triggerPasswordReset">{{login.resetPasswordString}}</div>
         </div>
       </div>
     </transition>
@@ -117,12 +119,15 @@
   }
   const loginDefault = {
     showLogin: false,
-    loginText: 'Connexion',
     uid: < any > null,
     hiboutikId: < any > null,
     mail: '',
+    passwordReset: false,
     password: '',
     error: '',
+    loginText: 'Connexion',
+    loginButtonString: 'Me connecter à mon espace',
+    resetPasswordString: "J'ai oublié mon mot de passe",
     tryingLogin: false
   }
 
@@ -152,11 +157,51 @@
       };
     },
     methods: {
-      showLoginPage: function () {
+      enterKeyOnLoginMailInput : function() {
+        if(this.login.passwordReset){
+          this.resetPassword()
+        } else {
+          this.focusInput('login-password-input')
+        }
+      },
+      triggerPasswordReset : function() {
+        this.login.passwordReset = !this.login.passwordReset
+        if(this.login.passwordReset){
+          this.login.loginText = "Réinitialiser mon mot de passe"
+          this.login.loginButtonString = 'Envoyer un e-mail de réinitialisation'
+          this.login.resetPasswordString = "Retourner à la connexion"
+        } else {
+          this.login.loginText = 'Connexion'
+          this.login.loginButtonString = 'Me connecter à mon espace'
+          this.login.resetPasswordString = "J'ai oublié mon mot de passe"
+        }
+      },
+      resetPassword: function () {
+        console.log(this.login.mail)
+        if(this.login.mail.length && validateEmail(this.login.mail)) {
+          this.login.tryingLogin = true
+          fb.resetPassword(this.login.mail).then(() => {
+            this.login.loginButtonString = 'Le mail de réinitialisation a été envoyé !'
+          }).catch(e => {
+            console.log(e)
+          } ).finally(() => this.login.tryingLogin = false)
+        }
+      },
+      closeLoginPage: function () {
+        this.login.showLogin = false
+        this.resetLoginPage()
+      },
+      resetLoginPage: function () {
         this.login.loginText = 'Connexion'
         this.login.uid = null
         this.login.hiboutikId = null
+        this.login.passwordReset = false
         this.login.error = ''
+        this.login.loginText = 'Connexion'
+        this.login.loginButtonString = 'Me connecter à mon espace'
+        this.login.resetPasswordString = "J'ai oublié mon mot de passe"
+      },
+      showLoginPage: function () {
         this.login.showLogin = true
         setTimeout(() => {
           this.focusInput('login-mail-input')
@@ -197,7 +242,9 @@
           this.tryingLinking = true
           this.mail = this.mail.toLowerCase()
           const mail = this.mail
-          fb.callFunction('searchCustomerForLinking', {mail}).then((response: any) => {
+          fb.callFunction('searchCustomerForLinking', {
+            mail
+          }).then((response: any) => {
             const customerData = response.data.customerData
             if (!response.data.uid) {
               if (customerData && customerData.email.toLowerCase() === mail) {
@@ -266,9 +313,23 @@
       }, 100)
     }
   });
+
 </script>
 
 <style>
+  .forgotten-password {
+    font-size: 14px;
+    opacity: .5;
+    margin: 0 10px;
+    align-self: flex-end;
+    cursor: pointer;
+  }
+
+  .forgotten-password:hover {
+    opacity: 1;
+    text-decoration: underline
+  }
+
   .header {
     position: absolute;
     z-index: 1;
@@ -377,6 +438,7 @@
       font-size: 35px;
       line-height: 35px;
     }
+
     .subtitle {
       font-size: 18px
     }
@@ -578,4 +640,5 @@
   .account-creation-state.active .account-state-number {
     background: #23b7e5;
   }
+
 </style>

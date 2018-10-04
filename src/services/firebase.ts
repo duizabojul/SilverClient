@@ -124,6 +124,14 @@ const createSpace = (uid:String, hiboutikId:Number) => {
     return getRef(`customersSpaces/${uid}`).set(userRecord)
 }
 
+const resetPassword = (email:string) => {
+    return new Promise((resolve, reject) => {
+        const location = window.location;
+        const settings = {url : `${location .protocol}//${location.host}/login`}
+        auth.sendPasswordResetEmail(email, settings).then(() => {resolve()}).catch(reject)
+    })
+}
+
 
 
 auth.onAuthStateChanged(setUser);
@@ -140,6 +148,7 @@ export default {
     getObjectRef,
     sendEmailVerification,
     createSpace,
+    resetPassword,
     createAccount : (email:string, password:string, hiboutikId : Number) => {
         return new Promise((resolve, reject) => {
             auth.createUserWithEmailAndPassword(email,password).then((userCredentials:firebase.auth.UserCredential) => {
