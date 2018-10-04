@@ -1,7 +1,10 @@
 html, body, #app {
     height : 100%;
     width : 100%;
-    line-height : 1.6
+    line-height : 1.6;
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 #nav {
     padding: 30px;
@@ -660,3 +663,15 @@ html, body, #app {
   .b-t{
     border-top : 1px solid rgba(0,0,0,.08)
   }
+
+  .el-tooltip__popper {
+    font-size: 14px;
+    max-width: 300px;
+    text-align: center;
+    line-height : 1.4;
+    font-weight: bold;
+  }
+
+  .el-tooltip__popper[x-placement^=top] {
+    margin-bottom: 5px;
+}

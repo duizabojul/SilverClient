@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Login from './views/Login.vue';
-import fb from '@/services/firebase.ts';
+import fb from '@/services/firebase';
 
 Vue.use(Router);
 

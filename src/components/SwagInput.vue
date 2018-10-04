@@ -60,9 +60,13 @@
       }
     },
     watch: {
-      value(v) {
-        this.input.value = v
-        this.input.dispatchEvent(new Event('input'));
+      value : function(newValue) {
+        this.input.value = newValue
+        if (this.input.value.length != 0) {
+            this.input.closest('.field').classList.add('field--show-floating-label')
+          } else {
+            this.input.closest('.field').classList.remove('field--show-floating-label')
+          }
       }
     },
     computed: {

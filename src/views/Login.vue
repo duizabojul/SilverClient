@@ -1,5 +1,5 @@
 <template>
-  <div id="home-page" class="page-container">
+  <div @click="hideTooltips" id="home-page" class="page-container">
     <transition name="slide-up-fade">
       <div class="full-page-modal" :class="newAccount.step === 2 ? 'leave' : ''" v-if="newAccount.hiboutikAccount">
         <div class="close-modal leave-element">
@@ -17,12 +17,18 @@
                   <div class="f-center flex-grow-1 w-lg flex-column">
                     <div class="label"><span class="icon-info m-r-xs top-1px"></span>Veuillez créer un mot de passe
                       d'au moins 6 caractères</div>
-                    <swag-input @keyup.enter="focusInput('account-creation-repeat-password-input')" style="max-width : 350px"
-                      @input="accountCreationEmailChanged" class="no-border" v-model="newAccount.password" placeholder="Créez votre mot de passe"
-                      id="account-creation-password-input" type="password"></swag-input>
-                    <swag-input @keyup.enter="createAccount" class="no-border" style="max-width : 350px" @input="accountCreationEmailChanged"
-                      v-model="newAccount.repeatPassword" placeholder="Confirmez votre mot de passe" id="account-creation-repeat-password-input"
-                      type="password"></swag-input>
+                    <el-tooltip v-bind:manual="true" v-bind:content="passwordTooltip.content" v-bind:value="passwordTooltip.show"
+                      placement="top">
+                      <swag-input @input="closePopover(passwordTooltip)" @keyup.enter="focusInput('account-creation-repeat-password-input')"
+                        style="max-width : 350px" class="no-border" v-model="newAccount.password" placeholder="Créez votre mot de passe"
+                        id="account-creation-password-input" type="password"></swag-input>
+                    </el-tooltip>
+                    <el-tooltip v-bind:manual="true" v-bind:content="passwordRepeatTooltip.content" v-bind:value="passwordRepeatTooltip.show"
+                      placement="top">
+                      <swag-input @input="closePopover(passwordRepeatTooltip)" @keyup.enter="createAccount" class="no-border"
+                        style="max-width : 350px" v-model="newAccount.repeatPassword" placeholder="Confirmez votre mot de passe"
+                        id="account-creation-repeat-password-input" type="password"></swag-input>
+                    </el-tooltip>
                   </div>
                 </div>
                 <div class="flip-card-back">
@@ -37,7 +43,7 @@
             </div>
           </div>
           <div class="flex w-full">
-            <button class="button w-full purple-background leave-element" @click="createAccount">
+            <button class="button w-full purple-background leave-element" @click.stop="createAccount">
               <div class="flex">
                 <span v-if="newAccount.creatingAccount" class="spinner white active-element m-r-sm"></span>
                 <span>{{newAccount.accountCreationString}}</span>
@@ -55,13 +61,21 @@
         <div class="flex-column f-center-v w-lg w-full" style="max-width : 430px; margin : 40px 0">
           <h1 style="font-size : 25px" class="leave-element text-center">{{login.loginText}}</h1>
           <div class="flex-column w-full">
-            <swag-input ref="loginMailInput" v-bind:isEmail="true" @keyup.enter="enterKeyOnLoginMailInput"
-              v-model="login.mail" placeholder="Entrez votre e-mail..." label="E-mail" id="login-mail-input"></swag-input>
-            <swag-input v-if="!login.passwordReset" @keyup.enter="logUser" v-model="login.password" type="password"
-              placeholder="Entrez votre mot de passe..." label="Mot de passe" id="login-password-input"></swag-input>
+            <el-tooltip v-bind:manual="true" v-bind:content="emailLoginTooltip.content" v-bind:value="emailLoginTooltip.show"
+              placement="top">
+              <swag-input @input="closePopover(emailLoginTooltip)" ref="loginMailInput" v-bind:isEmail="true"
+                @keyup.enter="enterKeyOnLoginMailInput" v-model="login.mail" placeholder="Entrez votre e-mail..." label="E-mail"
+                id="login-mail-input"></swag-input>
+            </el-tooltip>
+            <el-tooltip v-bind:manual="true" v-bind:content="passwordLoginTooltip.content" v-bind:value="passwordLoginTooltip.show"
+              placement="top">
+              <swag-input @input="closePopover(passwordLoginTooltip)" v-if="!login.passwordReset" @keyup.enter="logUser"
+                v-model="login.password" type="password" placeholder="Entrez votre mot de passe..." label="Mot de passe"
+                id="login-password-input"></swag-input>
+            </el-tooltip>
           </div>
           <div class="flex w-full">
-            <button @click="login.resetPassword ? resetPassword() : logUser()" class="button purple-background w-full m-t-sm m-b-sm">
+            <button @click.stop="login.passwordReset ? resetPassword() : logUser()" class="button purple-background w-full m-t-sm m-b-sm">
               <span v-if="!login.tryingLogin">{{login.loginButtonString}}</span>
               <div v-if="login.tryingLogin" class="spinner absolute-center white active-element">
               </div>
@@ -86,9 +100,12 @@
             garanties, et tous vos
             avantages Silver-Smok. </div>
           <div class="f-center-v f-wrap" style="margin : 0 -5px">
-            <swag-input v-bind:isEmail="true" class="m-xs" style="flex : 1 1 320px" @keyup.enter="linkAccount" @input="accountCreationEmailChanged"
-              v-model="mail" placeholder="Votre adresse e-mail" label="E-mail" id="account-creation-mail-input"></swag-input>
-            <button style="flex : 1 1 200px" class="button purple-background m-xs" @click="linkAccount">
+            <el-tooltip v-bind:manual="true" v-bind:content="linkAccountTooltip.content" v-bind:value="linkAccountTooltip.show"
+              placement="top">
+              <swag-input @input="closePopover(linkAccountTooltip)" v-bind:isEmail="true" class="m-xs" style="flex : 1 1 320px"
+                @keyup.enter="linkAccount" v-model="mail" placeholder="Votre adresse e-mail" label="E-mail" id="account-creation-mail-input"></swag-input>
+            </el-tooltip>
+            <button style="flex : 1 1 200px" class="button purple-background m-xs" @click.stop="linkAccount">
               <div class="flex">
                 <span v-if="tryingLinking" class="spinner white active-element m-r-sm"></span>
                 <span>Créer votre espace</span>
@@ -106,11 +123,12 @@
 </template>
 
 <script lang="ts">
-  import fb from '@/services/firebase.ts'
+  import fb from '@/services/firebase'
   import Vue from 'vue';
   import SwagInput from '@/components/SwagInput.vue';
-  import hb from '@/services/hiboutik.ts'
+  import hb from '@/services/hiboutik'
   import router from '@/router';
+
 
   const validateEmail = (email: string) => {
     var re =
@@ -140,6 +158,11 @@
     accountCreationString: 'Créer mon espace'
   }
 
+  const tooltips = [0, 0, 0, 0, 0].map(el => Object.assign({}, {
+    content: '',
+    show: false
+  }))
+
   export default Vue.extend({
     components: {
       SwagInput
@@ -153,20 +176,27 @@
         newAccount: Object.assign({}, newAccountDefault),
         mail: '',
         tryingLinking: false,
-        validEmail: false
+        linkAccountTooltip: tooltips[0],
+        passwordTooltip: tooltips[1],
+        passwordRepeatTooltip: tooltips[2],
+        emailLoginTooltip: tooltips[3],
+        passwordLoginTooltip: tooltips[4]
       };
     },
     methods: {
-      enterKeyOnLoginMailInput : function() {
-        if(this.login.passwordReset){
+      hideTooltips: function () {
+        tooltips.forEach(this.closePopover)
+      },
+      enterKeyOnLoginMailInput: function () {
+        if (this.login.passwordReset) {
           this.resetPassword()
         } else {
           this.focusInput('login-password-input')
         }
       },
-      triggerPasswordReset : function() {
+      triggerPasswordReset: function () {
         this.login.passwordReset = !this.login.passwordReset
-        if(this.login.passwordReset){
+        if (this.login.passwordReset) {
           this.login.loginText = "Réinitialiser mon mot de passe"
           this.login.loginButtonString = 'Envoyer un e-mail de réinitialisation'
           this.login.resetPasswordString = "Retourner à la connexion"
@@ -177,14 +207,17 @@
         }
       },
       resetPassword: function () {
-        console.log(this.login.mail)
-        if(this.login.mail.length && validateEmail(this.login.mail)) {
+        if (this.login.mail.length && validateEmail(this.login.mail)) {
           this.login.tryingLogin = true
           fb.resetPassword(this.login.mail).then(() => {
             this.login.loginButtonString = 'Le mail de réinitialisation a été envoyé !'
           }).catch(e => {
-            console.log(e)
-          } ).finally(() => this.login.tryingLogin = false)
+            if (e.code === 'auth/user-not-found') {
+              this.showPopover(this.emailLoginTooltip, `Cette adresse e-mail n'est associée à aucun compte.`)
+            }
+          }).finally(() => this.login.tryingLogin = false)
+        } else {
+          this.showPopover(this.emailLoginTooltip, `Oops. Cette adresse e-mail n'est pas valide`)
         }
       },
       closeLoginPage: function () {
@@ -208,103 +241,132 @@
         }, 300)
       },
       logUser: function () {
-        if (this.login.mail.length && this.login.password.length && validateEmail(this.login.mail)) {
-          this.login.tryingLogin = true
-          fb.logUser(this.login.mail, this.login.password).then(() => {
-            if (this.login.uid) {
-              fb.createSpace(this.login.uid, this.login.hiboutikId).then(() => {
-                this.login.tryingLogin = false
-                router.push('/home')
-              }).catch(() => {
-                this.login.tryingLogin = false
-              })
-            } else {
+        if (!validateEmail(this.login.mail)) {
+          this.showPopover(this.emailLoginTooltip, `Oops. Cette adresse e-mail n'est pas valide`)
+          return
+        }
+        if (!this.login.password.length) {
+          this.showPopover(this.passwordLoginTooltip, `Veuillez entrer un mot de passe`)
+          return
+        }
+        this.login.tryingLogin = true
+        fb.logUser(this.login.mail, this.login.password).then(() => {
+          if (this.login.uid) {
+            fb.createSpace(this.login.uid, this.login.hiboutikId).then(() => {
               this.login.tryingLogin = false
               router.push('/home')
-            }
-          }).catch(error => {
-            console.log(error)
+            }).catch(() => {
+              this.login.tryingLogin = false
+            })
+          } else {
             this.login.tryingLogin = false
-          })
-        }
-
+            router.push('/home')
+          }
+        }).catch(error => {
+          if(error.code === 'auth/user-not-found'){
+             this.showPopover(this.emailLoginTooltip, `Cette adresse e-mail n'est associée à aucun compte.`)
+          } else if(error.code === 'auth/wrong-password'){
+             this.showPopover(this.passwordLoginTooltip, `Mot de passe incorrect`)
+          }
+          this.login.tryingLogin = false
+        })
       },
       focusInput: function (elementId: string) {
         const input = document.getElementById(elementId)
         input && input.focus()
       },
-      accountCreationEmailChanged: function () {
-        this.validEmail = this.mail.length > 0 && validateEmail(this.mail)
+      closePopover: function (popover: any) {
+        popover.show = false
+      },
+      showPopover: function (popover: any, content: string) {
+        popover.content = content
+        popover.show = true
       },
       linkAccount: function (event: any) {
-        if (this.validEmail && !this.tryingLinking) {
-          event.target.blur()
-          this.tryingLinking = true
-          this.mail = this.mail.toLowerCase()
-          const mail = this.mail
-          fb.callFunction('searchCustomerForLinking', {
-            mail
-          }).then((response: any) => {
-            const customerData = response.data.customerData
-            if (!response.data.uid) {
-              if (customerData && customerData.email.toLowerCase() === mail) {
-                this.newAccount = Object.assign({}, newAccountDefault)
-                this.newAccount.hiboutikAccount = response.data.customerData
-                setTimeout(() => {
-                  this.focusInput('account-creation-password-input')
-                }, 300)
-              } else if (!customerData) {
-
-              }
-            } else {
-              if (customerData && customerData.email.toLowerCase() === mail) {
-                this.login.uid = response.data.uid
-                this.login.hiboutikId = parseInt(customerData.customers_id)
-                this.login.mail = mail
-                this.login.loginText = "Connectez vous pour créer votre espace"
-                this.login.showLogin = true
-                setTimeout(() => {
-                  this.focusInput('login-password-input')
-                }, 300)
-              } else if (!customerData) {
-                this.login.mail = mail
-                this.login.showLogin = true
-                setTimeout(() => {
-                  this.focusInput('login-password-input')
-                }, 300)
-              }
-            }
-          }).catch((e: any) => {
-            console.log(e)
-            if (e && e.code) {
-              if (e.code === 'already-exists') {
-
-              } else if (e.code === 'not-found') {
-
-              }
-            }
-          }).finally(() => {
-            this.tryingLinking = false
-          })
+        if (this.tryingLinking) {
+          return
         }
+        if (!validateEmail(this.mail)) {
+          this.showPopover(this.linkAccountTooltip, `Oops. Cette adresse e-mail n'est pas valide.`)
+          return
+        }
+        if (event && event.target) {
+          event.target.blur()
+        }
+        this.tryingLinking = true
+        this.mail = this.mail.toLowerCase()
+        const mail = this.mail
+        fb.callFunction('searchCustomerForLinking', {
+          mail
+        }).then((response: any) => {
+          const customerData = response.data.customerData
+          if (!response.data.uid) {
+            if (customerData) {
+              this.newAccount = Object.assign({}, newAccountDefault)
+              this.newAccount.hiboutikAccount = response.data.customerData
+              setTimeout(() => {
+                this.focusInput('account-creation-password-input')
+              }, 300)
+            } else if (!customerData) {
+
+            }
+          } else {
+            if (customerData) {
+              this.login.uid = response.data.uid
+              this.login.hiboutikId = parseInt(customerData.customers_id)
+              this.login.mail = mail
+              this.login.loginText = "Connectez vous pour créer votre espace"
+              this.login.showLogin = true
+              setTimeout(() => {
+                this.focusInput('login-password-input')
+              }, 300)
+            } else if (!customerData) {
+              this.login.mail = mail
+              this.login.showLogin = true
+              setTimeout(() => {
+                this.focusInput('login-password-input')
+              }, 300)
+            }
+          }
+        }).catch((e: any) => {
+          console.log(e)
+          if (e && e.code) {
+            if (e.code === 'not-found') {
+              this.showPopover(this.linkAccountTooltip,
+                `Oops. Cette adresse e-mail n'est associée à aucun compte Silver-Smok.`)
+            }
+          } else {
+            this.showPopover(this.linkAccountTooltip,
+              `Erreur. Réessayez ou contactez le service client Silver-Smok`)
+          }
+        }).finally(() => {
+          this.tryingLinking = false
+        })
       },
       createAccount: function () {
-        if (this.newAccount.password.length && this.newAccount.password === this.newAccount.repeatPassword) {
-          this.newAccount.creatingAccount = true
-          this.newAccount.accountCreationString = "Création de votre espace..."
-          const hiboutikAccount: any = this.newAccount.hiboutikAccount!
-            fb.createAccount(this.mail, this.newAccount.password, parseInt(hiboutikAccount.customers_id))
-            .then(userCredentials => {
-              this.newAccount.creatingAccount = false
-              this.newAccount.step = 2
-              setTimeout(() => {
-                router.push('/verifyEmail')
-              }, 1800)
-            }).catch((error: any) => {
-              console.log(error)
-              this.newAccount.creatingAccount = false
-            })
+        if (this.newAccount.password.length < 6) {
+          this.showPopover(this.passwordTooltip, `Veuillez entrer un mot de passe d'au moins 6 caractères.`)
+          return
         }
+        if (this.newAccount.password !== this.newAccount.repeatPassword) {
+          this.showPopover(this.passwordRepeatTooltip, `Les mots de passe sont différents.`)
+          return
+        }
+        this.newAccount.creatingAccount = true
+        this.newAccount.accountCreationString = "Création de votre espace..."
+        const hiboutikAccount: any = this.newAccount.hiboutikAccount!
+          fb.createAccount(this.mail, this.newAccount.password, parseInt(hiboutikAccount.customers_id))
+          .then(userCredentials => {
+            this.newAccount.step = 2
+            import('@/views/VerifyEmail.vue')
+            setTimeout(() => {
+              router.push('/verifyEmail')
+            }, 1800)
+          }).catch((error: any) => {
+            this.showPopover(this.linkAccountTooltip,
+              `Erreur. Réessayez ou contactez le service client Silver-Smok`)
+            console.log(error)
+          }).finally(() => this.newAccount.creatingAccount = false)
       }
     },
     mounted: function () {
@@ -313,7 +375,6 @@
       }, 100)
     }
   });
-
 </script>
 
 <style>
@@ -640,5 +701,4 @@
   .account-creation-state.active .account-state-number {
     background: #23b7e5;
   }
-
 </style>

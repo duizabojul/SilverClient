@@ -70,7 +70,7 @@ export default Vue.extend({
           this.buttonString = 'Oops. Une erreur a eu lieu';
           setTimeout(() => {
             this.buttonString = "Renvoyer l'e-mail";
-          }, 2000);
+          }, 3000);
         }).finally(() => {
           this.sendingMail = false;
         });
@@ -78,7 +78,6 @@ export default Vue.extend({
     },
   },
   created() {
-    console.log(this.currentUser);
   },
 });
 

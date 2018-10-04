@@ -1,12 +1,11 @@
-
+import fb from '@/services/firebase';
 import Vue from 'vue';
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import App from './App.vue';
 import router from './router';
-import fb from '@/services/firebase.ts';
 import './registerServiceWorker';
-import VTooltip from 'v-tooltip';
-
-Vue.use(VTooltip);
+Vue.use(ElementUI);
 
 let app:any = null;
 fb.auth.onAuthStateChanged((user) => {
