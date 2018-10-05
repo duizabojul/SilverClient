@@ -100,7 +100,7 @@
             garanties, et tous vos
             avantages Silver-Smok. </div>
           <div class="f-center-v f-wrap" style="margin : 0 -5px">
-            <el-tooltip v-bind:manual="true" v-bind:content="linkAccountTooltip.content" v-bind:value="linkAccountTooltip.show"
+            <el-tooltip v-bind:enterable="false" v-bind:manual="true" v-bind:content="linkAccountTooltip.content" v-bind:value="linkAccountTooltip.show"
               placement="top">
               <swag-input @input="closePopover(linkAccountTooltip)" v-bind:isEmail="true" class="m-xs" style="flex : 1 1 320px"
                 @keyup.enter="linkAccount" v-model="mail" placeholder="Votre adresse e-mail" label="E-mail" id="account-creation-mail-input"></swag-input>

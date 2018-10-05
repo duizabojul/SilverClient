@@ -119,7 +119,8 @@ const sendEmailVerification = () =>{
 
 const createSpace = (uid:String, hiboutikId:Number) => {
     const userRecord = {
-        id : hiboutikId
+        id : hiboutikId,
+        creationDate : Date.now()
     }
     return getRef(`customersSpaces/${uid}`).set(userRecord)
 }
